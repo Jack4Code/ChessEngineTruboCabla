@@ -103,7 +103,8 @@ namespace ChessEngineTruboCabla
             int Square = 21;
             if (FEN.Length > 0)
             {
-                for (int i = 0; i < FEN.Length; i++)
+                Console.WriteLine(FEN.Substring(0, FEN.IndexOf(" ")).Length.ToString());
+                for (int i = 0; i < FEN.Substring(0, FEN.IndexOf(" ")).Length; i++)
                 {
                     if (ValidCharacters.Contains(FEN[i].ToString().ToLower()))
                     {
@@ -171,7 +172,20 @@ namespace ChessEngineTruboCabla
                                 break;
                         }
                     }
-                    bool isNumber = Int32.TryParse(FEN[i].ToString(), out isNumber)
+                    //bool isNumber = Int32.TryParse(FEN[i].ToString(), out isNumber);
+                    bool isNumber = Char.IsNumber(FEN[i]);
+                    if(isNumber == true)
+                    {
+                        int spaces = (int) Char.GetNumericValue(FEN[i]);
+                        for (int s = 0; s < spaces; s++)
+                        {
+                            Pieces[Square + s] = null;
+                            BitBoard[Square + s] = 0;
+                        }
+                        Square = Square + spaces;
+                        //i = i + spaces;
+                        
+                    }
                     //Is it end of rank?
                     if (FEN[i].ToString() == "/")
                     {
