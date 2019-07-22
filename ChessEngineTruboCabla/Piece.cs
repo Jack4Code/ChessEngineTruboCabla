@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace ChessEngineTruboCabla
 {
-    public interface Piece
+    public abstract class Piece
     {
-        int Position { get; set; }
-        string Color { get; set; }
+        public int Position { get; set; }
+        public string Color { get; protected set; }
+        public List<int> PossibleMoves { get; protected set; }
+
+        public abstract int[] HowPieceMoves { get; }
+
+        public abstract void FindAllPossibleMoves(Board board);
 
     }
 }

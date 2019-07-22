@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace ChessEngineTruboCabla
 {
-    class GameManager
+    public class GameManager
     {
+        public GameManager()
+        {
+            StartNewGame();
+        }
+
+        public void StartNewGame()
+        {
+            Board board = new Board();
+
+            while(board.)
+        }
+
+
+
+
+
+
     }
 }

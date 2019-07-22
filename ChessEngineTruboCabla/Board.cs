@@ -15,12 +15,21 @@ namespace ChessEngineTruboCabla
         public Piece[] Pieces = new Piece[120];   //I think I will have an empty chess piece so I can do stuff with interfaces...or can empty piece be null object?
         public string CurrentFEN { get; set; }
         public int Turn { get; set; } //1 for white, -1 for black, 0 for nobody...end of game, draw, win whatever
+        public string CastleRights { get; set; }
+        public int Halfmove { get; set; }
+        public int FullMove { get; set; }
+        public string enPassant {get; set;}
+        public int checkStatus { get; set; } //-1 for black is in check. 0 for no one in check. 1 for white in check
 
 
         public Board()
         {
             CurrentFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
             Turn = 1;
+            CastleRights = "KQkq";
+            Halfmove = 0;
+            FullMove = 1;
+            enPassant = "-";
             #region initialize board
             //Initilaze a new Board...handles the initial positions of all the pieces
             //Handle the pawns
@@ -95,7 +104,7 @@ namespace ChessEngineTruboCabla
             }
         }
 
-        public void SetFEN(string FEN)
+        public void SetGameFromFEN(string FEN)
         {
             CurrentFEN = FEN;
             string[] ValidCharacters = { "p", "r", "n", "b", "q", "k" };
@@ -195,8 +204,123 @@ namespace ChessEngineTruboCabla
             }
         }
 
+        public void SetFenFromGame()
+        {
+            string newFEN = "";
+            for (int i = 21; i < 99; i++)
+            {
+
+                if (Pieces[i] != null)
+                {
+                    if (Pieces[i].GetType() == typeof(Pawn))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "p";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "P";
+                        }
+                    }
+                    else if (Pieces[i].GetType() == typeof(Rook))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "r";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "R";
+                        }
+                    }
+                    else if (Pieces[i].GetType() == typeof(Knight))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "n";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "N";
+                        }
+                    }
+                    else if (Pieces[i].GetType() == typeof(Bishop))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "b";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "B";
+                        }
+                    }
+                    else if (Pieces[i].GetType() == typeof(Queen))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "q";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "Q";
+                        }
+                    }
+                    else if (Pieces[i].GetType() == typeof(King))
+                    {
+                        if (Pieces[i].Color == "black")
+                        {
+                            newFEN = newFEN + "k";
+                        }
+                        else
+                        {
+                            newFEN = newFEN + "K";
+                        }
+                    }
+                }
+                else if(Pieces[i] == null)
+                {
+                    //see if last square has a number for the FEN has a number...that's one way to do it.
+                    //another way is to count the next suares until the next forward slash and see how many of them are empty
+                    int emptySquareCnt = 0;
+                    while(Pieces[i] == null)
+                    {
+                        if (i % 10 == 8)
+                        {
+                            emptySquareCnt++;
+                            break;
+                        }                           
+                        emptySquareCnt++;
+                        i++;
+                    }
+                    newFEN = newFEN + emptySquareCnt.ToString();
+                }
+
+                if (i%10 == 8)
+                {
+                    if(i != 98)
+                        newFEN = newFEN + "/";
+                    i = i + 2;
+                }
+                    
+            }
+            string TurnString = "";
+            if(Turn == 1)
+            {
+                TurnString = "w";
+            }
+            if(Turn == 2)
+            {
+                TurnString = "b";
+            }
+            newFEN = newFEN + " " + TurnString + " " + CastleRights + " " + enPassant + " " + Halfmove.ToString() + " " + FullMove.ToString();
+            
+            CurrentFEN = newFEN;
+        }
 
 
+        
 
         public void PrintBoard()
         {
