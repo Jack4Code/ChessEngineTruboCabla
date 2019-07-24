@@ -18,6 +18,20 @@ namespace ChessEngineTruboCabla
         {
             Position = position;
             Color = color;
+            DisplayChar = "R";
+            Value = 500;
+
+            SquareTable = new int[64]
+            {
+                0,  0,  0,  0,  0,  0,  0,  0,
+                0,100,100,100,100,100,100,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0,  0,  0,  0,  0,  0,  0,
+                90,90, 90, 90, 90, 90, 90, 90,
+                0,  0,  0,  0,  0,  0,  0,  0,
+                0,  0, 90, 90, 90, 90,  0,  0
+            };
         }
 
         public override void FindAllPossibleMoves(Board board)

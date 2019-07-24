@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessEngineTruboCabla.Gameplay;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -395,98 +396,84 @@ namespace ChessEngineTruboCabla
             CurrentFEN = newFEN;
         }
 
-        public bool MakeMove(string move)
+        public MoveResult MakeMove(string move)
         {
-            bool validMoveMade = false;
+            MoveResult result = MoveResult.Invalid;
 
-            return validMoveMade;
+            //TODO: actually do shit
+
+            return result;
         }
         
-
         public void PrintBoard()
         {
-            for (int i = 20; i < 100; i++)
-            {
-                if (Pieces[i] != null)
-                {
-                    if (Pieces[i].GetType() == typeof(Pawn))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("p");
-                        }
-                        else
-                        {
-                            Console.Write("P");
-                        }
-                    }
-                    else if (Pieces[i].GetType() == typeof(Rook))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("r");
-                        }
-                        else
-                        {
-                            Console.Write("R");
-                        }
-                    }
-                    else if (Pieces[i].GetType() == typeof(Knight))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("n");
-                        }
-                        else
-                        {
-                            Console.Write("N");
-                        }
-                    }
-                    else if (Pieces[i].GetType() == typeof(Bishop))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("b");
-                        }
-                        else
-                        {
-                            Console.Write("B");
-                        }
-                    }
-                    else if (Pieces[i].GetType() == typeof(Queen))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("q");
-                        }
-                        else
-                        {
-                            Console.Write("Q");
-                        }
-                    }
-                    else if (Pieces[i].GetType() == typeof(King))
-                    {
-                        if (Pieces[i].Color == "black")
-                        {
-                            Console.Write("k");
-                        }
-                        else
-                        {
-                            Console.Write("K");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.Write("_");
-                }
+            //TODO: if player is black rotate the board
 
-                if (i.ToString()[1].ToString() == "9") //i == 29 || i == 39 || i == 49 || i == 59 || i == 69 || i == 79 || i == 89 || i == 98
+            ConsoleColorsToDefault();
+            string files = "ABCDEFGH";
+            for (int i = 10; i < 120; i++)
+            {
+                int modTen = i % 10;
+                if (i < 20 || i > 99 && i < 110)
                 {
-                    Console.WriteLine();
+                    if (modTen == 0)
+                    {
+                        Console.Write("   -");
+                    }
+                    else if (modTen == 9)
+                    {
+                        Console.WriteLine("-");
+                    }
+                    else
+                    {
+                        Console.Write("---");
+                    }
+                }
+                else if (i >= 110)
+                {
+                    if (modTen > 0 && modTen < 9)
+                    {
+                        Console.Write(" " + files[modTen - 1] + " ");
+                    }
+                    else if (modTen == 0)
+                    {
+                        Console.Write("    ");
+                    }
+                    else if (modTen == 9)
+                    {
+                        Console.WriteLine();
+                    }
+                }
+                else if (modTen > 0 && modTen < 9)
+                {
+                    PrintSquare(i, Pieces[i]);
+                }
+                else if (modTen == 0)
+                {
+                    Console.Write(9 - (i / 10 - 1) + " | ");
+                }
+                else if (modTen == 9)
+                {
+                    Console.WriteLine(" |");
                 }
             }
+
             Console.WriteLine();
+        }
+
+        private void PrintSquare(int position, Piece piece)
+        {
+            Console.BackgroundColor = (position % 2) - (position / 10 % 2) == 0 ? ConsoleColor.DarkGray : ConsoleColor.Gray;
+            Console.ForegroundColor = piece == null || piece.Color == "white" ? ConsoleColor.White : ConsoleColor.Black;
+            Console.Write((piece == null ? "   " : " " + piece.DisplayChar + " "));
+
+            ConsoleColorsToDefault();
+        }
+
+        private void ConsoleColorsToDefault()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

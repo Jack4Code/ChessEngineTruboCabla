@@ -1,4 +1,5 @@
 ﻿using ChessEngineTruboCabla;
+using ChessEngineTruboCabla.Gameplay;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,36 @@ namespace ChessConsole
     {
         public static void Main(string[] args)
         {
+
+            bool isQuit = false;
+
+            while (!isQuit)
+            {
+                GameModeChoice gameMode = MainMenu.GetMode();
+                if (gameMode == GameModeChoice.Quit)
+                {
+                    isQuit = true;
+                }
+                else
+                {
+                    string p1Name = "Player 1";
+                    string p2Name = "Player 2";
+
+                    Game game = SetupGame(gameMode, p1Name, p2Name);
+
+                    if (game != null)
+                    {
+                        game.Start();
+                    }
+                }
+            }
+
+            Environment.Exit(0);
+
+            
+
+            
+
             Board board = new Board();
             //board.Pieces[24] = null;
             //board.BitBoard[24] = 0;
@@ -42,12 +73,35 @@ namespace ChessConsole
             //}
 
             Console.WriteLine(Evaluation.EvaluateBoard(board));
-
             
-
 
             Console.WriteLine("Press any key to escape: ");
             Console.ReadLine();
+        }
+
+        public static Game SetupGame(GameModeChoice gameMode, string p1Name, string p2Name)
+        {
+            Game game = null;
+            if (gameMode == GameModeChoice.PvP)
+            {
+                game = new Game(new HumanPlayer(p1Name), new HumanPlayer(p2Name));
+            }
+            else if (gameMode == GameModeChoice.PvC)
+            {
+                if (ColorMenu.GetColor() == ColorChoice.White)
+                {
+                    game = new Game(new HumanPlayer(p1Name), new ComputerPlayer(p2Name));
+                }
+                else
+                {
+                    game = new Game(new ComputerPlayer(p1Name), new HumanPlayer(p2Name));
+                }
+            }
+            else if (gameMode == GameModeChoice.CvC)
+            {
+                game = new Game(new ComputerPlayer(p1Name), new ComputerPlayer(p2Name));
+            }
+            return game;
         }
     }
 }

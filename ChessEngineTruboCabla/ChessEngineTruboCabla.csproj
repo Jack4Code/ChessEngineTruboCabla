@@ -48,6 +48,12 @@
     <Compile Include="Board.cs" />
     <Compile Include="Evaluation.cs" />
     <Compile Include="GameManager.cs" />
+    <Compile Include="Gameplay\ColorMenu.cs" />
+    <Compile Include="Gameplay\ComputerPlayer.cs" />
+    <Compile Include="Gameplay\Game.cs" />
+    <Compile Include="Gameplay\HumanPlayer.cs" />
+    <Compile Include="Gameplay\InputEnTitty.cs" />
+    <Compile Include="Gameplay\MainMenu.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="King.cs" />
     <Compile Include="Knight.cs" />
