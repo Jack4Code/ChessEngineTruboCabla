@@ -13,6 +13,7 @@ namespace ChessEngineTruboCabla
         public int[] OutOfBoundsArea = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 29, 30, 39, 40, 49, 50, 59, 60, 69, 70, 79, 80, 89, 90, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119 };
 
         public Piece[] Pieces = new Piece[120];   //I think I will have an empty chess piece so I can do stuff with interfaces...or can empty piece be null object?
+        public int PieceCntOnBoard  { get; set; }
         public string CurrentFEN { get; set; }
         public int Turn { get; set; } //1 for white, -1 for black, 0 for nobody...end of game, draw, win whatever
         public string CastleRights { get; set; }
@@ -22,7 +23,7 @@ namespace ChessEngineTruboCabla
         public int checkStatus { get; set; } //-1 for black is in check. 0 for no one in check. 1 for white in check
         public int checkMateStatus { get; set; } //-1 for black checkmates white. 0 for no one in checkmate. 1 for white checkmates black
         public bool GameOver { get; set; }
-
+        public Dictionary<int, int> MapTo64 = new Dictionary<int, int>();
 
         public Board()
         {
@@ -34,6 +35,7 @@ namespace ChessEngineTruboCabla
             enPassant = "-";
             checkStatus = 0;
             checkMateStatus = 0;
+            PieceCntOnBoard = 32;
             GameOver = false;
             #region initialize board
             //Initilaze a new Board...handles the initial positions of all the pieces
@@ -97,6 +99,75 @@ namespace ChessEngineTruboCabla
             //white
             Pieces[95] = new King("white", 95);
             BitBoard[95] = 1;
+            #endregion
+
+            #region Initialize 120 mapping to 64
+            //the following was created via SKYNET
+            MapTo64.Add(21, 0);
+            MapTo64.Add(22, 1);
+            MapTo64.Add(23, 2);
+            MapTo64.Add(24, 3);
+            MapTo64.Add(25, 4);
+            MapTo64.Add(26, 5);
+            MapTo64.Add(27, 6);
+            MapTo64.Add(28, 7);
+            MapTo64.Add(31, 8);
+            MapTo64.Add(32, 9);
+            MapTo64.Add(33, 10);
+            MapTo64.Add(34, 11);
+            MapTo64.Add(35, 12);
+            MapTo64.Add(36, 13);
+            MapTo64.Add(37, 14);
+            MapTo64.Add(38, 15);
+            MapTo64.Add(41, 16);
+            MapTo64.Add(42, 17);
+            MapTo64.Add(43, 18);
+            MapTo64.Add(44, 19);
+            MapTo64.Add(45, 20);
+            MapTo64.Add(46, 21);
+            MapTo64.Add(47, 22);
+            MapTo64.Add(48, 23);
+            MapTo64.Add(51, 24);
+            MapTo64.Add(52, 25);
+            MapTo64.Add(53, 26);
+            MapTo64.Add(54, 27);
+            MapTo64.Add(55, 28);
+            MapTo64.Add(56, 29);
+            MapTo64.Add(57, 30);
+            MapTo64.Add(58, 31);
+            MapTo64.Add(61, 32);
+            MapTo64.Add(62, 33);
+            MapTo64.Add(63, 34);
+            MapTo64.Add(64, 35);
+            MapTo64.Add(65, 36);
+            MapTo64.Add(66, 37);
+            MapTo64.Add(67, 38);
+            MapTo64.Add(68, 39);
+            MapTo64.Add(71, 40);
+            MapTo64.Add(72, 41);
+            MapTo64.Add(73, 42);
+            MapTo64.Add(74, 43);
+            MapTo64.Add(75, 44);
+            MapTo64.Add(76, 45);
+            MapTo64.Add(77, 46);
+            MapTo64.Add(78, 47);
+            MapTo64.Add(81, 48);
+            MapTo64.Add(82, 49);
+            MapTo64.Add(83, 50);
+            MapTo64.Add(84, 51);
+            MapTo64.Add(85, 52);
+            MapTo64.Add(86, 53);
+            MapTo64.Add(87, 54);
+            MapTo64.Add(88, 55);
+            MapTo64.Add(91, 56);
+            MapTo64.Add(92, 57);
+            MapTo64.Add(93, 58);
+            MapTo64.Add(94, 59);
+            MapTo64.Add(95, 60);
+            MapTo64.Add(96, 61);
+            MapTo64.Add(97, 62);
+            MapTo64.Add(98, 63);
+
             #endregion
 
         }

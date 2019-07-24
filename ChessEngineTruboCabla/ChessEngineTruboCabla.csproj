@@ -56,5 +56,8 @@
     <Compile Include="Queen.cs" />
     <Compile Include="Rook.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BoardVisuals\ChessBoard120.xlsx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
