@@ -12,7 +12,9 @@ namespace ChessConsole
     {
         public static void Main(string[] args)
         {
+            
 
+            /*
             bool isQuit = false;
 
             while (!isQuit)
@@ -37,11 +39,11 @@ namespace ChessConsole
             }
 
             Environment.Exit(0);
-
+            */
             
 
             
-
+            /*
             Board board = new Board();
             //board.Pieces[24] = null;
             //board.BitBoard[24] = 0;
@@ -73,7 +75,7 @@ namespace ChessConsole
             //}
 
             Console.WriteLine(Evaluation.EvaluateBoard(board));
-            
+            */
 
             Console.WriteLine("Press any key to escape: ");
             Console.ReadLine();

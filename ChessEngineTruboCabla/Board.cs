@@ -24,6 +24,8 @@ namespace ChessEngineTruboCabla
         public int checkStatus { get; set; } //-1 for black is in check. 0 for no one in check. 1 for white in check
         public int checkMateStatus { get; set; } //-1 for black checkmates white. 0 for no one in checkmate. 1 for white checkmates black
         public bool GameOver { get; set; }
+        public List<string> FENHistory { get; set; }
+        public List<string> PGN { get; set; }
         public Dictionary<int, int> MapTo64 = new Dictionary<int, int>();
 
         public Board()
@@ -184,6 +186,7 @@ namespace ChessEngineTruboCabla
         public void SetGameFromFEN(string FEN)
         {
             CurrentFEN = FEN;
+            FENHistory.Add(CurrentFEN);
             string[] ValidCharacters = { "p", "r", "n", "b", "q", "k" };
             int[] EmptySquares = { 1, 2, 3, 4, 5, 6, 7, 8 };
             int Square = 21;
@@ -279,6 +282,11 @@ namespace ChessEngineTruboCabla
                     }
                 }
             }
+        }
+
+        public void SetGameFromPGN()
+        {
+            
         }
 
         public void SetFenFromGame()
@@ -399,8 +407,12 @@ namespace ChessEngineTruboCabla
         public MoveResult MakeMove(string move)
         {
             MoveResult result = MoveResult.Invalid;
-
+            PGN.Add(move);
             //TODO: actually do shit
+            try
+            {
+                SetGameFromPGN();
+            }
 
             return result;
         }

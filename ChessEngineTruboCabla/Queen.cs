@@ -18,7 +18,7 @@ namespace ChessEngineTruboCabla
         {
             Position = position;
             Color = color;
-            DisplayChar = "Q";
+            DisplayChar = Color == "white" ? "Q" : "q";
             Value = 900;
 
             SquareTable = new int[64]
