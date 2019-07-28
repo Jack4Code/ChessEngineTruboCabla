@@ -47,7 +47,6 @@
     <Compile Include="Bishop.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="Evaluation.cs" />
-    <Compile Include="GameManager.cs" />
     <Compile Include="Gameplay\ColorMenu.cs" />
     <Compile Include="Gameplay\ComputerPlayer.cs" />
     <Compile Include="Gameplay\Game.cs" />

@@ -8,11 +8,23 @@ using System.Threading.Tasks;
 
 namespace ChessConsole
 {
+    public class Move
+    {
+        public Dictionary<string, int> moves { get; set; }
+
+        public Move(string moveToMake, int evaluation)
+        {
+            move = 
+        }
+
+        public List<Move> ResponseMoves { get; set; }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
-
+            /*
             bool isQuit = false;
 
             while (!isQuit)
@@ -37,11 +49,13 @@ namespace ChessConsole
             }
 
             Environment.Exit(0);
+            */
 
+          
             
 
             
-
+            /*
             Board board = new Board();
             //board.Pieces[24] = null;
             //board.BitBoard[24] = 0;
@@ -73,7 +87,7 @@ namespace ChessConsole
             //}
 
             Console.WriteLine(Evaluation.EvaluateBoard(board));
-            
+            */
 
             Console.WriteLine("Press any key to escape: ");
             Console.ReadLine();
