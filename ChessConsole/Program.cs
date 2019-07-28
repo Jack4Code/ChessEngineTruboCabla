@@ -8,12 +8,27 @@ using System.Threading.Tasks;
 
 namespace ChessConsole
 {
+    public class Move
+    {
+        public Dictionary<string, int> moves { get; set; }
+
+        public Move(string moveToMake, int evaluation)
+        {
+            move = 
+        }
+
+        public List<Move> ResponseMoves { get; set; }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
+<<<<<<< HEAD
             
 
+=======
+>>>>>>> 458d139773d1bed8c057490ac4d305436e533ca8
             /*
             bool isQuit = false;
 
@@ -40,6 +55,11 @@ namespace ChessConsole
 
             Environment.Exit(0);
             */
+<<<<<<< HEAD
+=======
+
+          
+>>>>>>> 458d139773d1bed8c057490ac4d305436e533ca8
             
 
             
