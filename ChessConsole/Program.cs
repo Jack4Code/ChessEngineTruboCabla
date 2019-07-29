@@ -12,10 +12,10 @@ namespace ChessConsole
     {
         public Dictionary<string, int> moves { get; set; }
 
-        public Move(string moveToMake, int evaluation)
-        {
-            move = 
-        }
+        //public Move(string moveToMake, int evaluation)
+        //{
+        //    move = 
+        //}
 
         public List<Move> ResponseMoves { get; set; }
     }
@@ -24,11 +24,48 @@ namespace ChessConsole
     {
         public static void Main(string[] args)
         {
-<<<<<<< HEAD
+            //Testing Black
+            //int square = 54;
+            //Board board = new Board();
+            //board.Pieces[square] = new Pawn("black", square);
+            //board.Pieces[63] = new Pawn("white", 63);
+            //board.BitBoard[63] = 1;
+            //board.Pieces[65] = new Pawn("white", 65);
+            //board.BitBoard[65] = 1;
+            //board.Pieces[64] = new Pawn("black", 64);
+            //board.BitBoard[64] = -1;
+
+
+            //Testing White
+            //int square = 81;
+            //Board board = new Board();
+            //board.Pieces[72] = new Pawn("black", 72);
+            //board.BitBoard[72] = -1;
+
+            Board board = new Board();
+            int square = 93;
+            board.Pieces[84] = null;
+            board.BitBoard[84] = 0;
+            board.Pieces[82] = null;
+            board.BitBoard[82] = 0;
+
+
+            board.PrintBoard();
+            //board.MakeMove("e2e4");
+            //board.PrintBoard();
+            board.Pieces[square].FindAllPossibleMoves(board);
+            for(int i=0; i<board.Pieces[square].PossibleMoves.Count; i++)
+            {
+                Console.WriteLine(board.Pieces[square].PossibleMoves[i]);
+            }
+
             
 
-=======
->>>>>>> 458d139773d1bed8c057490ac4d305436e533ca8
+            
+
+            
+
+
             /*
             bool isQuit = false;
 
@@ -55,14 +92,10 @@ namespace ChessConsole
 
             Environment.Exit(0);
             */
-<<<<<<< HEAD
-=======
 
-          
->>>>>>> 458d139773d1bed8c057490ac4d305436e533ca8
-            
 
-            
+
+
             /*
             Board board = new Board();
             //board.Pieces[24] = null;
@@ -131,9 +164,7 @@ namespace ChessConsole
 
 /*
  
-    Dictionary<int, int> MapTo64 = new Dictionary<int, int>();
-            MapTo64.Add(21, 0);
-            MapTo64.Add(22, 1);
+    
 
             //SKYNET: CODE THAT WRITES ITSELF!!!
             int rowIncrement = 0;
@@ -149,6 +180,22 @@ namespace ChessConsole
                 }
             }
 
-            Console.WriteLine(MapTo64[22]);
+            
+
+
+
+    //SKYNET: CODE THAT WRITES ITSELF!!!
+            int rowIncrement = 0;
+            for (int i = 21; i < 99; i++)
+            {
+                if (i % 10 != 0 && i % 10 != 9)
+                {
+                    Console.WriteLine("MapTo120.Add(" + ((i - 21) - rowIncrement).ToString() + "," + i.ToString() + ");");
+                }
+                else if (i % 10 == 9)
+                {
+                    rowIncrement += 2;
+                }
+            }
 
 */

@@ -18,7 +18,7 @@ namespace ChessEngineTruboCabla
         {
             Position = position;
             Color = color;
-            DisplayChar = Color == "white" ? "P": "p";// "P";
+            DisplayChar = Color == "white" ? "P": "p";
             Value = 100;
 
             SquareTable = new int[64]
@@ -50,28 +50,57 @@ namespace ChessEngineTruboCabla
             PossibleMoves = new List<int>();
             if (Position.ToString().Substring(0, 1) == "8" || Position.ToString().Substring(0, 1) == "3")
             {
-
                 for (int i = 0; i < HowPieceMoves.Length; i++)
                 {
                     if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null && !(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        if(HowPieceMoves[i] == 10 || HowPieceMoves[i] == 20)
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }  
+                    }
+                    if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
+                    {
+                        if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] != null && HowPieceMoves[i] != 10 && HowPieceMoves[i] != 20)
+                        {
+                            if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color)
+                            {
+                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            }
+                        } 
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < HowPieceMoves.Length - 1; i++)
+                for (int i = 1; i < HowPieceMoves.Length; i++)
                 {
+                    //if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null && !(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
+                    //{
+                    //    PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                    //}
                     if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null && !(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        if (HowPieceMoves[i] == 10 || HowPieceMoves[i] == 20)
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }
+                    }
+                    if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
+                    {
+                        if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] != null && HowPieceMoves[i] != 10 && HowPieceMoves[i] != 20)
+                        {
+                            if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color)
+                            {
+                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        public override int[] HowPieceMoves { get { return new int[] { 9, 10, 11, 20 }; } }
+        public override int[] HowPieceMoves { get { return new int[] { 20, 10, 9, 11 }; } }
 
     }
 }
