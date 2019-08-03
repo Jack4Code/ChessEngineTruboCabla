@@ -43,24 +43,24 @@ namespace ChessConsole
             //board.BitBoard[72] = -1;
 
             Board board = new Board();
-            int square = 54;
-            board.Pieces[square] = new Knight("white", square);
-            board.BitBoard[square] = 1;
+            //int square = 54;
+            //board.Pieces[square] = new Knight("white", square);
+            //board.BitBoard[square] = 1;
+
+            board.GenerateAllAlgebraicAvailableMoves();
 
 
-            
-
-            board.PrintBoard();
-            //board.MakeMove("e2e4");
             //board.PrintBoard();
-            board.Pieces[square].FindAllPossibleMoves(board);
-            for(int i=0; i<board.Pieces[square].PossibleMoves.Count; i++)
-            {
-                Console.WriteLine(board.Pieces[square].PossibleMoves[i]);
-            }
-
+            ////board.MakeMove("e2e4");
+            ////board.PrintBoard();
+            //board.Pieces[square].FindAllPossibleMoves(board);
+            //for(int i=0; i<board.Pieces[square].PossibleMoves.Count; i++)
+            //{
+            //    Console.WriteLine(board.Pieces[square].PossibleMoves[i]);
+            //}
 
             
+
 
 
             /*

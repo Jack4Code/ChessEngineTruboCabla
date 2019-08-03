@@ -489,26 +489,26 @@ namespace ChessEngineTruboCabla
 
         public static Dictionary<string, byte> AlgebraicToIntegerIndex = new Dictionary<string, byte>()
         {
-            {"a1", 0}, {"a2", 8}, {"a3", 16}, {"a4", 24}, {"a5", 32}, {"a6", 40}, {"a7", 48}, {"a8", 56},
-            {"b1", 1}, {"b2", 9}, {"b3", 17}, {"b4", 25}, {"b5", 33}, {"b6", 41}, {"b7", 49}, {"b8", 57},
-            {"c1", 2}, {"c2", 10}, {"c3", 18}, {"c4", 26}, {"c5", 34}, {"c6", 42}, {"c7", 50}, {"c8", 58},
-            {"d1", 3}, {"d2", 11}, {"d3", 19}, {"d4", 27}, {"d5", 35}, {"d6", 43}, {"d7", 51}, {"d8", 59},
-            {"e1", 4}, {"e2", 12}, {"e3", 20}, {"e4", 28}, {"e5", 36}, {"e6", 44}, {"e7", 52}, {"e8", 60},
-            {"f1", 5}, {"f2", 13}, {"f3", 21}, {"f4", 29}, {"f5", 37}, {"f6", 45}, {"f7", 53}, {"f8", 61},
-            {"g1", 6}, {"g2", 14}, {"g3", 22}, {"g4", 30}, {"g5", 38}, {"g6", 46}, {"g7", 54}, {"g8", 62},
-            {"h1", 7}, {"h2", 15}, {"h3", 23}, {"h4", 31}, {"h5", 39}, {"h6", 47}, {"h7", 55}, {"h8", 63},
+            {"a8", 0}, {"a7", 8}, {"a6", 16}, {"a5", 24}, {"a4", 32}, {"a3", 40}, {"a2", 48}, {"a1", 56},
+            {"b8", 1}, {"b7", 9}, {"b6", 17}, {"b5", 25}, {"b4", 33}, {"b3", 41}, {"b2", 49}, {"b1", 57},
+            {"c8", 2}, {"c7", 10},{"c6", 18}, {"c5", 26}, {"c4", 34}, {"c3", 42}, {"c2", 50}, {"c1", 58},
+            {"d8", 3}, {"d7", 11},{"d6", 19}, {"d5", 27}, {"d4", 35}, {"d3", 43}, {"d2", 51}, {"d1", 59},
+            {"e8", 4}, {"e7", 12},{"e6", 20}, {"e5", 28}, {"e4", 36}, {"e3", 44}, {"e2", 52}, {"e1", 60},
+            {"f8", 5}, {"f7", 13},{"f6", 21}, {"f5", 29}, {"f4", 37}, {"f3", 45}, {"f2", 53}, {"f1", 61},
+            {"g8", 6}, {"g7", 14},{"g6", 22}, {"g5", 30}, {"g4", 38}, {"g3", 46}, {"g2", 54}, {"g1", 62},
+            {"h8", 7}, {"h7", 15},{"h6", 23}, {"h5", 31}, {"h4", 39}, {"h3", 47}, {"h2", 55}, {"h1", 63},
         };
 
-        public static Dictionary<Int16, string> IntegerIndexToAlgebraic = new Dictionary<Int16, string>()
+        public static Dictionary<int, string> IntegerIndexToAlgebraic = new Dictionary<int, string>()
         {
-            {0, "a1"}, {8, "a2"}, {16, "a3"}, {24, "a4"}, {32, "a5"}, {40, "a6"}, {48, "a7"}, {56, "a8"},
-            {1, "b1"}, {9, "b2"}, {17, "b3"}, {25, "b4"}, {33, "b5"}, {41, "b6"}, {49, "b7"}, {57, "b8"},
-            {2, "c1"}, {10, "c2"}, {18, "c3"}, {26, "c4"}, {34, "c5"}, {42, "c6"}, {50, "c7"}, {58, "c8"},
-            {3, "d1"}, {11, "d2"}, {19, "d3"}, {27, "d4"}, {35, "d5"}, {43, "d6"}, {51, "d7"}, {59, "d8"},
-            {4, "e1"}, {12, "e2"}, {20, "e3"}, {28, "e4"}, {36, "e5"}, {44, "e6"}, {52, "e7"}, {60, "e8"},
-            {5, "f1"}, {13, "f2"}, {21, "f3"}, {29, "f4"}, {37, "f5"}, {45, "f6"}, {53, "f7"}, {61, "f8"},
-            {6, "g1"}, {14, "g2"}, {22, "g3"}, {30, "g4"}, {38, "g5"}, {46, "g6"}, {54, "g7"}, {62, "g8"},
-            {7, "h1"}, {15, "h2"}, {23, "h3"}, {31, "h4"}, {39, "h5"}, {47, "h6"}, {55, "h7"}, {63, "h8"},
+            {0, "a8"}, {8, "a7"}, {16, "a6"}, {24, "a5"}, {32, "a4"}, {40, "a3"}, {48, "a2"}, {56, "a1"},
+            {1, "b8"}, {9, "b7"}, {17, "b6"}, {25, "b5"}, {33, "b4"}, {41, "b3"}, {49, "b2"}, {57, "b1"},
+            {2, "c8"}, {10,"c7"}, {18, "c6"}, {26, "c5"}, {34, "c4"}, {42, "c3"}, {50, "c2"}, {58, "c1"},
+            {3, "d8"}, {11,"d7"}, {19, "d6"}, {27, "d5"}, {35, "d4"}, {43, "d3"}, {51, "d2"}, {59, "d1"},
+            {4, "e8"}, {12,"e7"}, {20, "e6"}, {28, "e5"}, {36, "e4"}, {44, "e3"}, {52, "e2"}, {60, "e1"},
+            {5, "f8"}, {13,"f7"}, {21, "f6"}, {29, "f5"}, {37, "f4"}, {45, "f3"}, {53, "f2"}, {61, "f1"},
+            {6, "g8"}, {14,"g7"}, {22, "g6"}, {30, "g5"}, {38, "g4"}, {46, "g3"}, {54, "g2"}, {62, "g1"},
+            {7, "h8"}, {15,"h7"}, {23, "h6"}, {31, "h5"}, {39, "h4"}, {47, "h3"}, {55, "h2"}, {63, "h1"},
         };
 
         public MoveResult MakeMove(string move)
@@ -548,18 +548,28 @@ namespace ChessEngineTruboCabla
             return true;
         }
 
-        public void GenerateAllAlgebraicAvailableMoves()
+        public void GenerateAllAlgebraicAvailableMoves() //this operates by player. it looks at the turn variable
         {
+            string AllMoves = "";
+            string PlayerColorToMove = Turn == 1 ? "white" : "black";
             for(int i=21; i<99; i++)
             {
                 //if piece has available move...add it to AlgebraicAvailableMoves.Add("e2e4")
-                if(Pieces[i] != null)
+                if(Pieces[i] != null && Pieces[i].Color == PlayerColorToMove)
                 {
                     Pieces[i].FindAllPossibleMoves(this);
                     //Pieces[i].PossibleMoves;
-
+                    for (int m = 0; m < Pieces[i].PossibleMoves.Count; m++)
+                    {
+                        //Console.WriteLine("i: " + i.ToString());
+                        //Console.WriteLine("m: " + m.ToString());
+                        //Console.WriteLine(MapTo64[i].ToString());
+                        //Console.WriteLine(MapTo64[Pieces[i].PossibleMoves[m]].ToString());
+                        AllMoves += IntegerIndexToAlgebraic[MapTo64[i]] + IntegerIndexToAlgebraic[MapTo64[Pieces[i].PossibleMoves[m]]] + ",";
+                    }
                 }
             }
+            Console.WriteLine(AllMoves);
         }
 
         public void PrintBoard()
