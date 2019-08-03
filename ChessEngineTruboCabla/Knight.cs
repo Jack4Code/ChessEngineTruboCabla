@@ -9,10 +9,10 @@ namespace ChessEngineTruboCabla
     public class Knight : Piece
     {
         public int Position { get; set; }
-        public string Color { get; set; }
-        public int[] PossibleMoves { get; set; }
+        //public string Color { get; set; }
+        //public int[] PossibleMoves { get; set; }
 
-        public override int[] HowPieceMoves => throw new NotImplementedException();
+        public override int[] HowPieceMoves { get { return new int[] { -21, -19, -12, -8, 8, 12, 19, 21 }; } }
 
         public Knight(string color, int position)
         {
@@ -36,7 +36,34 @@ namespace ChessEngineTruboCabla
 
         public override void FindAllPossibleMoves(Board board)
         {
-            throw new NotImplementedException();
+            PossibleMoves = new List<int>();
+            int pieceColor = 0;
+            if (Color == "white")
+            {
+                pieceColor = 1;
+            }
+            else
+            {
+                pieceColor = -1;
+            }
+
+            for (int i = 0; i < HowPieceMoves.Length; i++)
+            {
+                //check for out of bounds?
+                if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
+                {
+                    //is square null
+                    if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null)
+                    {
+                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                    }
+                    else if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color) //if the square is not empty, is it occupied by enemy piece?
+                    {
+                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                    }
+                }
+            }
+
         }
     }
 }

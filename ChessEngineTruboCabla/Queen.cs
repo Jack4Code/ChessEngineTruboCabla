@@ -66,7 +66,7 @@ namespace ChessEngineTruboCabla
                     PossibleMoves.Add((direction * pieceColor * -1) + position);
                     RecursiveMovesGet(board, -1 * pieceColor * (direction) + position, (direction));
                 }
-                else if (board.Pieces[Position + direction * pieceColor * -1] != null)
+                else if (board.Pieces[position + direction * pieceColor * -1] != null)
                 {
                     //okay we're blocked, but is the block an enemy piece?
                     if (board.Pieces[position + direction * pieceColor * -1].Color != Color && board.Pieces[position + direction * pieceColor * -1].Color != null)

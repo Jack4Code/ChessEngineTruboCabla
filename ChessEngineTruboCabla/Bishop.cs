@@ -9,7 +9,7 @@ namespace ChessEngineTruboCabla
     public class Bishop : Piece
     {
         public int Position { get; set; }
-        public string Color { get; set; }
+        //public string Color { get; set; }
         //public List<int> PossibleMoves { get; set; }
 
         //public override int[] HowPieceMoves => throw new NotImplementedException();
@@ -38,7 +38,7 @@ namespace ChessEngineTruboCabla
         public override void FindAllPossibleMoves(Board board)
         {
             PossibleMoves = new List<int>();
-            for(int i=0; i<HowPieceMoves.Length; i++)
+            for (int i = 0; i < HowPieceMoves.Length; i++)
             {
                 RecursiveMovesGet(board, Position, HowPieceMoves[i]);
             }
@@ -66,10 +66,10 @@ namespace ChessEngineTruboCabla
                     PossibleMoves.Add((direction * pieceColor * -1) + position);
                     RecursiveMovesGet(board, -1 * pieceColor * (direction) + position, (direction));
                 }
-                else if (board.Pieces[Position + direction * pieceColor * -1] != null)
+                else if (board.Pieces[position + direction * pieceColor * -1] != null)
                 {
                     //okay we're blocked, but is the block an enemy piece?
-                    if(board.Pieces[position + direction * pieceColor * -1].Color != Color)
+                    if (board.Pieces[position + direction * pieceColor * -1].Color != Color && board.Pieces[position + direction * pieceColor * -1].Color != null)
                     {
                         PossibleMoves.Add((direction * pieceColor * -1) + position);
                     }

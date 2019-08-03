@@ -43,13 +43,12 @@ namespace ChessConsole
             //board.BitBoard[72] = -1;
 
             Board board = new Board();
-            int square = 94;
-            board.Pieces[84] = null;
-            board.BitBoard[84] = 0;
-            board.Pieces[83] = null;
-            board.BitBoard[83] = 0;
-            board.Pieces[85] = null;
-            board.BitBoard[85] = 0;
+            int square = 54;
+            board.Pieces[square] = new Knight("white", square);
+            board.BitBoard[square] = 1;
+
+
+            
 
             board.PrintBoard();
             //board.MakeMove("e2e4");
@@ -60,9 +59,6 @@ namespace ChessConsole
                 Console.WriteLine(board.Pieces[square].PossibleMoves[i]);
             }
 
-            
-
-            
 
             
 
