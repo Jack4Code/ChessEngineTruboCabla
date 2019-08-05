@@ -597,7 +597,16 @@ namespace ChessEngineTruboCabla
 
         public void DetermineIfCheck()
         {
-
+            //find the respective king on the board
+            int PositionOfKing = 0;
+            for(int i=21; i<99; i++)
+            {
+                if(BitBoard[i] == Turn)
+                {
+                    PositionOfKing = i;
+                }
+            }
+            //now that we have the king, look to see if there are any enemy pieces touching the square the king is on
         }
 
         public void DetermineIfCheckMate()
