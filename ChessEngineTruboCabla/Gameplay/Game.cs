@@ -43,7 +43,7 @@ namespace ChessEngineTruboCabla.Gameplay
 
             while (!isQuit)
             {
-                ProcessInput();
+                ProcessInput(board);
                 Update();
                 Render();
             }
@@ -76,11 +76,11 @@ namespace ChessEngineTruboCabla.Gameplay
             Console.Write("  > ");
         }
 
-        private void ProcessInput()
+        private void ProcessInput(Board board)
         {
             if (!isGameOver)
             {
-                currentCommand = activePlayer.GetInput();
+                currentCommand = activePlayer.GetInput(board);
             }
             else
             {

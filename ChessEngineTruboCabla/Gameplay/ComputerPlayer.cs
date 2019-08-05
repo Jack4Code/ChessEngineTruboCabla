@@ -13,9 +13,13 @@ namespace ChessEngineTruboCabla.Gameplay
 
         }
 
-        public override string GetInput()
+        public override string GetInput(Board board)
         {
-            return "";
+            //return "";
+            board.GenerateAllAlgebraicAvailableMoves();
+            List<string> moves = board.AlgebraicAvailableMoves;
+            Random r = new Random();
+            return moves[r.Next(0,moves.Count)];
         }
     }
 }

@@ -15,6 +15,6 @@ namespace ChessEngineTruboCabla.Gameplay
             Name = name;
         }
 
-        public abstract string GetInput();
+        public abstract string GetInput(Board board);
     }
 }

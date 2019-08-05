@@ -13,7 +13,7 @@ namespace ChessEngineTruboCabla.Gameplay
 
         }
 
-        public override string GetInput()
+        public override string GetInput(Board board)
         {
             return Console.ReadLine();
         }
