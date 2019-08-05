@@ -42,6 +42,7 @@ namespace ChessEngineTruboCabla
             checkMateStatus = 0;
             PieceCntOnBoard = 32;
             GameOver = false;
+            PGN = new List<string>();
             #region initialize board
             //Initilaze a new Board...handles the initial positions of all the pieces
             //Handle the pawns
@@ -248,9 +249,10 @@ namespace ChessEngineTruboCabla
 
         public Board(string FEN)
         {
+            FENHistory = new List<string>();
             if (FEN.Length > 0) //Make the board represent the FEN
             {
-
+                SetGameFromFEN(FEN);
             }
         }
 
@@ -513,28 +515,46 @@ namespace ChessEngineTruboCabla
 
         public MoveResult MakeMove(string move)
         {
+            GenerateAllAlgebraicAvailableMoves();
             MoveResult result = MoveResult.Invalid;
-            PGN.Add(move);
-            //TODO: actually do shit
-            //try
-            //{
-            //    SetGameFromPGN();
-            //}
-            //if(move[0].ToString().ToLower() != "r" || move[0].ToString().ToLower() != "n" || move[0].ToString().ToLower() != "b" || move[0].ToString().ToLower() != "q" || move[0].ToString().ToLower() != "k")
-            //{
-            //    //Then we are dealing with a pawn move...therefore seperate the move by first two and last two characters
-            //    //a capture in this notation does not have an x. it has
 
-            //}
-            //don't need to do the if statement above. The format coming back from the UCI debugger in arena is always square to square
-            //for instance e2e4
-            //another example: b5c6 for white bishop on b5 capturing pawn on c6
-            //simply loop through AlgebraicAvailableMoves and see if move is in the list
             for(int i=0; i< AlgebraicAvailableMoves.Count; i++)
             {
                 if(AlgebraicAvailableMoves[i] == move)
                 {
-
+                    result = MoveResult.Valid;
+                    if(move != "e1g1" && move != "e1c1" && move != "e8g8" && move != "e8c8")
+                    {
+                        //then we are dealing with a non-castling move
+                        PGN.Add(move);
+                        string firstSquare = move.Substring(0, 2);
+                        string secondSquare = move.Substring(2, 2);
+                        Piece pieceThatMoves = Pieces[MapTo120[AlgebraicToIntegerIndex[firstSquare]]];
+                        int pieceThatMovesBit = BitBoard[MapTo120[AlgebraicToIntegerIndex[firstSquare]]];
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[firstSquare]]] = null;
+                        BitBoard[MapTo120[AlgebraicToIntegerIndex[firstSquare]]] = 0;
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMoves;
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].Position = MapTo120[AlgebraicToIntegerIndex[secondSquare]];
+                        BitBoard[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMovesBit;
+                        Turn = Turn * -1;
+                    }
+                    else
+                    {
+                        //dealing with castling move
+                        PGN.Add(move);
+                        //first handle the king
+                        string firstSquare = move.Substring(0, 2);
+                        string secondSquare = move.Substring(2, 2);
+                        Piece pieceThatMoves = Pieces[MapTo120[AlgebraicToIntegerIndex[firstSquare]]];
+                        int pieceThatMovesBit = BitBoard[MapTo120[AlgebraicToIntegerIndex[firstSquare]]];
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[firstSquare]]] = null;
+                        BitBoard[MapTo120[AlgebraicToIntegerIndex[firstSquare]]] = 0;
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMoves;
+                        Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].Position = MapTo120[AlgebraicToIntegerIndex[secondSquare]];
+                        BitBoard[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMovesBit;
+                        //then handle the respective rook
+                        Turn = Turn * -1;
+                    }
                 }
             }
 
@@ -551,6 +571,7 @@ namespace ChessEngineTruboCabla
         public void GenerateAllAlgebraicAvailableMoves() //this operates by player. it looks at the turn variable
         {
             string AllMoves = "";
+            AlgebraicAvailableMoves = new List<String>();
             string PlayerColorToMove = Turn == 1 ? "white" : "black";
             for(int i=21; i<99; i++)
             {
@@ -566,10 +587,28 @@ namespace ChessEngineTruboCabla
                         //Console.WriteLine(MapTo64[i].ToString());
                         //Console.WriteLine(MapTo64[Pieces[i].PossibleMoves[m]].ToString());
                         AllMoves += IntegerIndexToAlgebraic[MapTo64[i]] + IntegerIndexToAlgebraic[MapTo64[Pieces[i].PossibleMoves[m]]] + ",";
+                        AlgebraicAvailableMoves.Add(IntegerIndexToAlgebraic[MapTo64[i]] + IntegerIndexToAlgebraic[MapTo64[Pieces[i].PossibleMoves[m]]]);
                     }
                 }
             }
-            Console.WriteLine(AllMoves);
+            AllMoves = AllMoves.TrimEnd(',');
+            //Console.WriteLine(AllMoves);
+        }
+
+        public void DetermineIfCheck()
+        {
+
+        }
+
+        public void DetermineIfCheckMate()
+        {
+            //There are no legal moves for a side, and the side's king is in check
+        }
+
+        public void DetermineIfStaleMate()
+        {
+            //There are no legal moves, but the king is not in check.
+            //handle draw by repetition
         }
 
         public void PrintBoard()

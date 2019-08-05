@@ -8,7 +8,7 @@ namespace ChessEngineTruboCabla
 {
     public class Rook : Piece
     {
-        public int Position { get; set; }
+        //public int Position { get; set; }
         //public string Color { get; set; }
         //public int[] PossibleMoves { get; set; }
 

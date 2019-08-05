@@ -8,7 +8,7 @@ namespace ChessEngineTruboCabla
 {
     public class Queen : Piece
     {
-        public int Position { get; set; }
+        //public int Position { get; set; }
         //public string Color { get; set; }
         //public List<int> PossibleMoves { get; set; }
 

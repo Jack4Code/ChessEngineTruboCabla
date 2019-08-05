@@ -42,14 +42,15 @@ namespace ChessConsole
             //board.Pieces[72] = new Pawn("black", 72);
             //board.BitBoard[72] = -1;
 
-            Board board = new Board();
+            //Board board = new Board();
             //int square = 54;
             //board.Pieces[square] = new Knight("white", square);
             //board.BitBoard[square] = 1;
-
-            board.GenerateAllAlgebraicAvailableMoves();
-
-
+            //board.PrintBoard();
+            //board.GenerateAllAlgebraicAvailableMoves();
+            //Console.WriteLine("The number of Available moves is: " + board.AlgebraicAvailableMoves.Count.ToString());
+            //board.MakeMove("e2e4");
+            //board.PrintBoard();
             //board.PrintBoard();
             ////board.MakeMove("e2e4");
             ////board.PrintBoard();
@@ -59,11 +60,11 @@ namespace ChessConsole
             //    Console.WriteLine(board.Pieces[square].PossibleMoves[i]);
             //}
 
+            //Board board = new Board("r1b1N2k/3p2Qp/8/p7/1p2P3/3P4/2PB3N/7K b - - 0 34");
+            //board.PrintBoard();
+
+
             
-
-
-
-            /*
             bool isQuit = false;
 
             while (!isQuit)
@@ -88,7 +89,7 @@ namespace ChessConsole
             }
 
             Environment.Exit(0);
-            */
+            
 
 
 
