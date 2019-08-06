@@ -23,6 +23,8 @@ namespace ChessEngineTruboCabla
         public string enPassant { get; set; }
         public int checkStatus { get; set; } //-1 for black is in check. 0 for no one in check. 1 for white in check
         public int checkMateStatus { get; set; } //-1 for black checkmates white. 0 for no one in checkmate. 1 for white checkmates black
+        public int PositionOfWhiteKing { get; set; }
+        public int PositionOfBlackKing { get; set; }
         public bool GameOver { get; set; }
         public List<string> FENHistory { get; set; }
         public List<string> PGN { get; set; }
@@ -40,6 +42,8 @@ namespace ChessEngineTruboCabla
             enPassant = "-";
             checkStatus = 0;
             checkMateStatus = 0;
+            PositionOfBlackKing = 25;
+            PositionOfWhiteKing = 95;
             PieceCntOnBoard = 32;
             GameOver = false;
             PGN = new List<string>();
@@ -518,12 +522,12 @@ namespace ChessEngineTruboCabla
             GenerateAllAlgebraicAvailableMoves();
             MoveResult result = MoveResult.Invalid;
 
-            for(int i=0; i< AlgebraicAvailableMoves.Count; i++)
+            for (int i = 0; i < AlgebraicAvailableMoves.Count; i++)
             {
-                if(AlgebraicAvailableMoves[i] == move)
+                if (AlgebraicAvailableMoves[i] == move)
                 {
                     result = MoveResult.Valid;
-                    if(move != "e1g1" && move != "e1c1" && move != "e8g8" && move != "e8c8")
+                    if (move != "e1g1" && move != "e1c1" && move != "e8g8" && move != "e8c8")
                     {
                         //then we are dealing with a non-castling move
                         PGN.Add(move);
@@ -536,7 +540,24 @@ namespace ChessEngineTruboCabla
                         Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMoves;
                         Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].Position = MapTo120[AlgebraicToIntegerIndex[secondSquare]];
                         BitBoard[MapTo120[AlgebraicToIntegerIndex[secondSquare]]] = pieceThatMovesBit;
+                        if (Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].GetType() == typeof(King))
+                        {
+                            //update king position
+                            if (Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].Color == "white")
+                            {
+                                PositionOfWhiteKing = MapTo120[AlgebraicToIntegerIndex[secondSquare]];
+                            }
+                            else if (Pieces[MapTo120[AlgebraicToIntegerIndex[secondSquare]]].Color == "black")
+                            {
+                                PositionOfBlackKing = MapTo120[AlgebraicToIntegerIndex[secondSquare]];
+                            }
+                        }
                         Turn = Turn * -1;
+                        DetermineIfCheck();
+                        if (checkStatus != 0)
+                        {
+                            result = MoveResult.Check;
+                        }
                     }
                     else
                     {
@@ -573,10 +594,10 @@ namespace ChessEngineTruboCabla
             string AllMoves = "";
             AlgebraicAvailableMoves = new List<String>();
             string PlayerColorToMove = Turn == 1 ? "white" : "black";
-            for(int i=21; i<99; i++)
+            for (int i = 21; i < 99; i++)
             {
                 //if piece has available move...add it to AlgebraicAvailableMoves.Add("e2e4")
-                if(Pieces[i] != null && Pieces[i].Color == PlayerColorToMove)
+                if (Pieces[i] != null && Pieces[i].Color == PlayerColorToMove)
                 {
                     Pieces[i].FindAllPossibleMoves(this);
                     //Pieces[i].PossibleMoves;
@@ -597,21 +618,380 @@ namespace ChessEngineTruboCabla
 
         public void DetermineIfCheck()
         {
-            //find the respective king on the board
-            int PositionOfKing = 0;
-            for(int i=21; i<99; i++)
+            checkStatus = 0;
+            //There are no legal moves for a side, and the side's king is in check
+            if (Turn == 1)
             {
-                if(BitBoard[i] == Turn)
+                //then we are dealing with white king
+                //first check if there are pawns touching the king
+                int[] PossiblePawns = new int[] { -11, -9 };
+                for (int i = 0; i < PossiblePawns.Length; i++)
                 {
-                    PositionOfKing = i;
+                    //check for out of bounds?
+                    if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfWhiteKing + PossiblePawns[i]) != -1))
+                    {
+                        if (Pieces[PositionOfWhiteKing + PossiblePawns[i]] != null)
+                        {
+                            if (Pieces[PositionOfWhiteKing + PossiblePawns[i]].GetType() == typeof(Pawn) && Pieces[PositionOfWhiteKing + PossiblePawns[i]].Color == "black")
+                            {
+                                checkStatus = 1;
+                                return;
+                            }
+                        }
+                    }
+                }
+                int[] PossibleKnights = new int[] { -21, -19, -12, -8, 8, 12, 19, 21 };
+                for (int i = 0; i < PossibleKnights.Length; i++)
+                {
+                    //check for out of bounds?
+                    if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfWhiteKing + PossibleKnights[i]) != -1))
+                    {
+                        if (Pieces[PositionOfWhiteKing + PossibleKnights[i]] != null)
+                        {
+                            if (Pieces[PositionOfWhiteKing + PossibleKnights[i]].GetType() == typeof(Knight) && Pieces[PositionOfWhiteKing + PossibleKnights[i]].Color == "black")
+                            {
+                                checkStatus = 1;
+                                return;
+                            }
+                        }
+                    }
+                }
+                int[] PossibleBishops = new int[] { -11, -9, 9, 11 };
+                for (int i = 0; i < PossibleBishops.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfWhiteKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleBishops[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleBishops[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleBishops[i]].GetType() == typeof(Bishop))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "black")
+                                    {
+                                        checkStatus = 1;
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (Pieces[PositionOfSlider + PossibleBishops[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "white")
+                                {
+                                    //than it's white's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "black" && !(Pieces[PositionOfSlider + PossibleBishops[i]].GetType() == typeof(Bishop)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleBishops[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleBishops[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
+                }
+                int[] PossibleRooks = new int[] { -10, -1, 1, 10 };
+                for (int i = 0; i < PossibleRooks.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfWhiteKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleRooks[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleRooks[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleRooks[i]].GetType() == typeof(Rook))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "black")
+                                    {
+                                        checkStatus = 1;
+                                        return;
+                                    }
+                                }
+                            }
+                            if (Pieces[PositionOfSlider + PossibleRooks[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "white")
+                                {
+                                    //than it's white's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "black" && !(Pieces[PositionOfSlider + PossibleRooks[i]].GetType() == typeof(Rook)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleRooks[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleRooks[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
+                }
+                int[] PossibleQueens = new int[] { -11, -10, -9, -1, 1, 9, 10, 11 };
+                for (int i = 0; i < PossibleQueens.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfWhiteKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleQueens[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleQueens[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleQueens[i]].GetType() == typeof(Queen))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "black")
+                                    {
+                                        checkStatus = 1;
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (Pieces[PositionOfSlider + PossibleQueens[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "white")
+                                {
+                                    //than it's white's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "black" && !(Pieces[PositionOfSlider + PossibleQueens[i]].GetType() == typeof(Queen)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleQueens[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleQueens[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
                 }
             }
-            //now that we have the king, look to see if there are any enemy pieces touching the square the king is on
+            else if (Turn == -1)
+            {
+                //then we are dealing with black king
+                //first check if there are pawns touching the king
+                int[] PossiblePawns = new int[] { 11, 9 };
+                for (int i = 0; i < PossiblePawns.Length; i++)
+                {
+                    //check for out of bounds?
+                    if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfBlackKing + PossiblePawns[i]) != -1))
+                    {
+                        if (Pieces[PositionOfBlackKing + PossiblePawns[i]] != null)
+                        {
+                            if (Pieces[PositionOfBlackKing + PossiblePawns[i]].GetType() == typeof(Pawn) && Pieces[PositionOfBlackKing + PossiblePawns[i]].Color == "white")
+                            {
+                                checkStatus = -1;
+                                return;
+                            }
+                        }
+                    }
+                }
+                int[] PossibleKnights = new int[] { -21, -19, -12, -8, 8, 12, 19, 21 };
+                for (int i = 0; i < PossibleKnights.Length; i++)
+                {
+                    //check for out of bounds?
+                    if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfBlackKing + PossibleKnights[i]) != -1))
+                    {
+                        if (Pieces[PositionOfBlackKing + PossibleKnights[i]] != null)
+                        {
+                            if (Pieces[PositionOfBlackKing + PossibleKnights[i]].GetType() == typeof(Knight) && Pieces[PositionOfBlackKing + PossibleKnights[i]].Color == "white")
+                            {
+                                checkStatus = -1;
+                                return;
+                            }
+                        }
+                    }
+                }
+                int[] PossibleBishops = new int[] { -11, -9, 9, 11 };
+                for (int i = 0; i < PossibleBishops.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfBlackKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleBishops[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleBishops[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleBishops[i]].GetType() == typeof(Bishop))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "white")
+                                    {
+                                        checkStatus = -1;
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (Pieces[PositionOfSlider + PossibleBishops[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "black")
+                                {
+                                    //than it's black's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleBishops[i]].Color == "white" && !(Pieces[PositionOfSlider + PossibleBishops[i]].GetType() == typeof(Bishop)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleBishops[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleBishops[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
+                }
+                int[] PossibleRooks = new int[] { -10, -1, 1, 10 };
+                for (int i = 0; i < PossibleRooks.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfBlackKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleRooks[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleRooks[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleRooks[i]].GetType() == typeof(Rook))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "white")
+                                    {
+                                        checkStatus = -1;
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (Pieces[PositionOfSlider + PossibleRooks[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "black")
+                                {
+                                    //than it's black's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleRooks[i]].Color == "white" && !(Pieces[PositionOfSlider + PossibleRooks[i]].GetType() == typeof(Rook)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleRooks[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleRooks[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
+                }
+                int[] PossibleQueens = new int[] { -11, -10, -9, -1, 1, 9, 10, 11 };
+                for (int i = 0; i < PossibleQueens.Length; i++)
+                {
+                    bool outOfBoundsOrBlocked = false;
+                    int PositionOfSlider = PositionOfBlackKing;
+                    while (!outOfBoundsOrBlocked)
+                    {
+                        //check for out of bounds?
+                        if (!(OutOfBoundsArea.ToList().IndexOf(PositionOfSlider + PossibleQueens[i]) != -1))
+                        {
+                            if (Pieces[PositionOfSlider + PossibleQueens[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleQueens[i]].GetType() == typeof(Queen))
+                                {
+                                    if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "white")
+                                    {
+                                        checkStatus = -1;
+                                        return;
+                                    }
+                                }
+                            }
+
+                            if (Pieces[PositionOfSlider + PossibleQueens[i]] != null)
+                            {
+                                if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "black")
+                                {
+                                    //than it's black's own piece. we don't need to slide
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else if (Pieces[PositionOfSlider + PossibleQueens[i]].Color == "white" && !(Pieces[PositionOfSlider + PossibleQueens[i]].GetType() == typeof(Queen)))
+                                {
+                                    outOfBoundsOrBlocked = true;
+                                }
+                                else
+                                {
+                                    PositionOfSlider = PositionOfSlider + PossibleQueens[i];
+                                }
+                            }
+                            else
+                            {
+                                PositionOfSlider = PositionOfSlider + PossibleQueens[i];
+                            }
+                        }
+                        else
+                        {
+                            outOfBoundsOrBlocked = true;
+                        }
+                    }
+                }
+            }
         }
 
         public void DetermineIfCheckMate()
         {
-            //There are no legal moves for a side, and the side's king is in check
+
         }
 
         public void DetermineIfStaleMate()
