@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessEngineTruboCabla
 {
+    [Serializable]
     public class King : Piece
     {
         //public int Position { get; set; }
@@ -59,23 +60,66 @@ namespace ChessEngineTruboCabla
                 pieceColor = -1;
             }
 
-            for(int i=0; i<HowPieceMoves.Length; i++)
+            for (int i = 0; i < HowPieceMoves.Length; i++)
             {
                 //check for out of bounds?
                 if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
                 {
                     //is square null
-                    if(board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null)
+                    if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null)
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        //before adding it, call a function which will determine if the move will put the king in check. if so, don't add the move.
+                        if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }
                     }
-                    else if(board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color) //if the square is not empty, is it occupied by enemy piece?
+                    else if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color) //if the square is not empty, is it occupied by enemy piece?
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }
                     }
                 }
             }
-            
+        }
+
+        public bool isLegalMove(int potentialMove, Board board, int pieceColor)
+        {
+            bool isLegal = true;
+            //Board hypotheticalBoard = board.Copy();
+
+            Board hypotheticalBoard = Utilities.DeepClone<Board>(board);
+
+            hypotheticalBoard.Pieces[Position] = null;
+            hypotheticalBoard.BitBoard[Position] = 0;
+            hypotheticalBoard.Pieces[potentialMove] = new King(Color, potentialMove);
+            hypotheticalBoard.BitBoard[potentialMove] = pieceColor;
+            if (pieceColor == 1)
+            {
+                hypotheticalBoard.PositionOfWhiteKing = potentialMove;
+            }
+            else if (pieceColor == -1)
+            {
+                hypotheticalBoard.PositionOfBlackKing = potentialMove;
+            }
+            //loop through surrounding squares to make sure enemy king isn't near by
+            int[] kingSquaresToExamine = new int[] { -11, -10, -9, -1, 1, 9, 10, 11 };
+            for(int i=0; i<kingSquaresToExamine.Length; i++)
+            {
+                if(hypotheticalBoard.PositionOfWhiteKing + kingSquaresToExamine[i] == hypotheticalBoard.PositionOfBlackKing)
+                {
+                    isLegal = false;
+                }
+            }
+            hypotheticalBoard.DetermineIfCheck();
+            if (hypotheticalBoard.checkStatus == pieceColor)
+            {
+                isLegal = false;
+            }
+
+            return isLegal;
         }
     }
 }

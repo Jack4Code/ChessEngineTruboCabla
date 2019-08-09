@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChessEngineTruboCabla
 {
+    [Serializable]
     public class Board
     {
         public int[] BitBoard = new int[120]; //The bit board representation of the board...my understanding is if the squares are occupied or not...chose int
@@ -1070,5 +1071,10 @@ namespace ChessEngineTruboCabla
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        //public Board Copy()
+        //{
+        //    return (Board)this.MemberwiseClone();
+        //}
     }
 }

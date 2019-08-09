@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessEngineTruboCabla
 {
+    [Serializable]
     public class Knight : Piece
     {
         //public int Position { get; set; }
