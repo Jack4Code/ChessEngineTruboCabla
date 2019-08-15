@@ -64,15 +64,26 @@ namespace ChessEngineTruboCabla
                 if (board.Pieces[position + direction * pieceColor * -1] == null)
                 {
                     //okay we're not blocked
-                    PossibleMoves.Add((direction * pieceColor * -1) + position);
-                    RecursiveMovesGet(board, -1 * pieceColor * (direction) + position, (direction));
+                    if (isLegalMove((direction * pieceColor * -1) + position, board, pieceColor))
+                    {
+                        PossibleMoves.Add((direction * pieceColor * -1) + position);
+                        RecursiveMovesGet(board, -1 * pieceColor * (direction) + position, (direction));
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
                 else if (board.Pieces[position + direction * pieceColor * -1] != null)
                 {
                     //okay we're blocked, but is the block an enemy piece?
                     if (board.Pieces[position + direction * pieceColor * -1].Color != Color && board.Pieces[position + direction * pieceColor * -1].Color != null)
                     {
-                        PossibleMoves.Add((direction * pieceColor * -1) + position);
+                        if (isLegalMove((direction * pieceColor * -1) + position, board, pieceColor))
+                        {
+                            PossibleMoves.Add((direction * pieceColor * -1) + position);
+                        }
+                            
                     }
                     return;
                 }
@@ -81,8 +92,29 @@ namespace ChessEngineTruboCabla
             {
                 return;
             }
-
-            //return new List<int>();
         }
+
+
+        public bool isLegalMove(int potentialMove, Board board, int pieceColor)
+        {
+            bool isLegal = true;
+            //Board hypotheticalBoard = board.Copy();
+
+            Board hypotheticalBoard = Utilities.DeepClone<Board>(board);
+
+            hypotheticalBoard.Pieces[Position] = null;
+            hypotheticalBoard.BitBoard[Position] = 0;
+            hypotheticalBoard.Pieces[potentialMove] = new Queen(Color, potentialMove);
+            hypotheticalBoard.BitBoard[potentialMove] = pieceColor;
+            hypotheticalBoard.DetermineIfCheck();
+            if (hypotheticalBoard.checkStatus == pieceColor)
+            {
+                isLegal = false;
+            }
+
+            return isLegal;
+        }
+
+
     }
 }

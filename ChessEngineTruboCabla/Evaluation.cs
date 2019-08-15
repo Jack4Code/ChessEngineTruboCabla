@@ -12,6 +12,16 @@ namespace ChessEngineTruboCabla
         {
             int whiteValue = 0;
             int blackValue = 0;
+            int checkMateStatus = 0;
+
+            if (board.checkMateStatus == 1)
+            {
+                checkMateStatus = 1000000;
+            }
+            else if (board.checkMateStatus == -1)
+            {
+                checkMateStatus = -1000000;
+            }
 
             for (int i = 21; i < 99; i++)
             {
@@ -26,7 +36,7 @@ namespace ChessEngineTruboCabla
                     blackValue += (board.BitBoard[i] * GetPieceValue(board.Pieces[i])) - GetPositionWeight(board.Pieces[i], (board.MapTo64[i]), board.PieceCntOnBoard);
                 }
             }
-            return whiteValue + blackValue;
+            return whiteValue + blackValue + checkMateStatus;
         }
 
         public static int GetPieceValue(Piece piece)

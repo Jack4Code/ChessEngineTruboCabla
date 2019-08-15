@@ -11,6 +11,7 @@ namespace ChessEngineTruboCabla
     {
         //Class Specific Variables
         public int MultipleSquareMoves = 1; //7; for queen
+        public override int[] HowPieceMoves { get { return new int[] { 20, 10, 9, 11 }; } }
 
         //Constructors
         public Pawn() { }
@@ -57,7 +58,11 @@ namespace ChessEngineTruboCabla
                     {
                         if(HowPieceMoves[i] == 10 || HowPieceMoves[i] == 20)
                         {
-                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            //PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                            {
+                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            }
                         }  
                     }
                     if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
@@ -66,7 +71,11 @@ namespace ChessEngineTruboCabla
                         {
                             if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color)
                             {
-                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                                //PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                                if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                                {
+                                    PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                                }
                             }
                         } 
                     }
@@ -84,7 +93,11 @@ namespace ChessEngineTruboCabla
                     {
                         if (HowPieceMoves[i] == 10 || HowPieceMoves[i] == 20)
                         {
-                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            //PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                            {
+                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                            }
                         }
                     }
                     if (!(board.OutOfBoundsArea.ToList().IndexOf(Position + HowPieceMoves[i] * pieceColor * -1) != -1))
@@ -93,7 +106,10 @@ namespace ChessEngineTruboCabla
                         {
                             if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color)
                             {
-                                PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                                if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                                {
+                                    PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                                }
                             }
                         }
                     }
@@ -101,7 +117,27 @@ namespace ChessEngineTruboCabla
             }
         }
 
-        public override int[] HowPieceMoves { get { return new int[] { 20, 10, 9, 11 }; } }
+        
+
+        public bool isLegalMove(int potentialMove, Board board, int pieceColor)
+        {
+            bool isLegal = true;
+            //Board hypotheticalBoard = board.Copy();
+
+            Board hypotheticalBoard = Utilities.DeepClone<Board>(board);
+
+            hypotheticalBoard.Pieces[Position] = null;
+            hypotheticalBoard.BitBoard[Position] = 0;
+            hypotheticalBoard.Pieces[potentialMove] = new Queen(Color, potentialMove);
+            hypotheticalBoard.BitBoard[potentialMove] = pieceColor;
+            hypotheticalBoard.DetermineIfCheck();
+            if (hypotheticalBoard.checkStatus == pieceColor)
+            {
+                isLegal = false;
+            }
+
+            return isLegal;
+        }
 
     }
 }

@@ -56,15 +56,43 @@ namespace ChessEngineTruboCabla
                     //is square null
                     if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1] == null)
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        //PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }
                     }
                     else if (board.Pieces[Position + HowPieceMoves[i] * pieceColor * -1].Color != Color) //if the square is not empty, is it occupied by enemy piece?
                     {
-                        PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        //PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        if (isLegalMove((HowPieceMoves[i] * pieceColor * -1) + Position, board, pieceColor))
+                        {
+                            PossibleMoves.Add((HowPieceMoves[i] * pieceColor * -1) + Position);
+                        }
                     }
                 }
             }
 
+        }
+
+        public bool isLegalMove(int potentialMove, Board board, int pieceColor)
+        {
+            bool isLegal = true;
+            //Board hypotheticalBoard = board.Copy();
+
+            Board hypotheticalBoard = Utilities.DeepClone<Board>(board);
+
+            hypotheticalBoard.Pieces[Position] = null;
+            hypotheticalBoard.BitBoard[Position] = 0;
+            hypotheticalBoard.Pieces[potentialMove] = new Queen(Color, potentialMove);
+            hypotheticalBoard.BitBoard[potentialMove] = pieceColor;
+            hypotheticalBoard.DetermineIfCheck();
+            if (hypotheticalBoard.checkStatus == pieceColor)
+            {
+                isLegal = false;
+            }
+
+            return isLegal;
         }
     }
 }

@@ -555,9 +555,14 @@ namespace ChessEngineTruboCabla
                         }
                         Turn = Turn * -1;
                         DetermineIfCheck();
+                        DetermineIfCheckMate();
                         if (checkStatus != 0)
                         {
                             result = MoveResult.Check;
+                        }
+                        if(checkMateStatus != 0)
+                        {
+                            result = MoveResult.Checkmate;
                         }
                     }
                     else
@@ -992,6 +997,14 @@ namespace ChessEngineTruboCabla
 
         public void DetermineIfCheckMate()
         {
+            GenerateAllAlgebraicAvailableMoves();
+            if (checkStatus != 0)
+            {
+                if(AlgebraicAvailableMoves.Count == 0)
+                {
+                    checkMateStatus = Turn;
+                }
+            }
 
         }
 
