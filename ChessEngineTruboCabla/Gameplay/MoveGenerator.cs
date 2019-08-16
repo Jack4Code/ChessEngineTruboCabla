@@ -46,7 +46,7 @@ namespace ChessEngineTruboCabla.Gameplay
 
             if(depth == 0)
             {
-
+                return "";
             }
 
             board.GenerateAllAlgebraicAvailableMoves();
