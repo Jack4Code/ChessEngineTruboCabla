@@ -53,6 +53,7 @@
     <Compile Include="Gameplay\HumanPlayer.cs" />
     <Compile Include="Gameplay\InputEnTitty.cs" />
     <Compile Include="Gameplay\MainMenu.cs" />
+    <Compile Include="Gameplay\MoveGenerator.cs" />
     <Compile Include="Gameplay\MoveResult.cs" />
     <Compile Include="Gameplay\UCI.cs" />
     <Compile Include="Piece.cs" />
