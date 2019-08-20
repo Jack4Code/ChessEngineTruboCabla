@@ -8,16 +8,35 @@ using System.Threading.Tasks;
 
 namespace ChessConsole
 {
+    //public class Move
+    //{
+    //    public Dictionary<string, int> moves { get; set; }
+
+    //    //public Move(string moveToMake, int evaluation)
+    //    //{
+    //    //    move = 
+    //    //}
+
+    //    public List<Move> ResponseMoves { get; set; }
+    //}
+
     public class Move
     {
-        public Dictionary<string, int> moves { get; set; }
+        public string move { get; set; }
+        public int moveStrength { get; set; }
+        public List<Move> responses { get; set; }
 
-        //public Move(string moveToMake, int evaluation)
-        //{
-        //    move = 
-        //}
+        public Move()
+        {
+            move = "";
+            moveStrength = 0;
+            responses = new List<Move>();
+        }
 
-        public List<Move> ResponseMoves { get; set; }
+        public Move(int strength)
+        {
+            moveStrength = strength;
+        }
     }
 
     public class Program
@@ -27,9 +46,9 @@ namespace ChessConsole
 
             //args = new string[1] { "isready" };
 
-            for(int i=0; i<args.Length; i++)
+            for (int i = 0; i < args.Length; i++)
             {
-                if(args[i] == "isready")
+                if (args[i] == "isready")
                 {
                     bool isQuit = false;
 
@@ -58,22 +77,155 @@ namespace ChessConsole
                 }
             }
 
-            
-            
+
+
+            //Random r = new Random();
+            //int moves = r.Next(30);
+            //Node parent = new Node();
+            //for(int i=0; i< moves; i++)
+            //{
+            //    List<Node> children = new List<Node>();
+            //    parent.moves.Add(i.ToString(), children);
+            //    Random r2 = new Random();
+            //    int submoves = r2.Next(30);
+            //    for(int j=0; j<submoves; j++)
+            //    {
+            //        parent.moves[i.ToString()].Add(new Node());
+            //    }
+            //}
 
 
 
+            //will need a list of parent nodes
 
-            
+
+            List<Move> moves = new List<Move>();
+            Move moveOne = new Move();
+            moveOne.moveStrength = 5;
+            moveOne.move = "e2e4";
+
+            List<Move> moveOneResponses = new List<Move>();
+            Move moveOneResponseOne = new Move();
+            moveOneResponseOne.moveStrength = -3;
+            moveOneResponseOne.move = "e7e5";
+
+            Move moveOneResponseTwo = new Move();
+            moveOneResponseTwo.moveStrength = 6;
+            moveOneResponseTwo.move = "d7d5";
+
+            moveOneResponses.Add(moveOneResponseOne);
+            moveOneResponses.Add(moveOneResponseTwo);
+
+            moveOne.responses = moveOneResponses;
+
+            moves.Add(moveOne);
+
+            Move moveTwo = new Move();
+            moveTwo.moveStrength = 6;
+            moveTwo.move = "d2d4";
+
+            ///
+            List<Move> moveTwoResponses = new List<Move>();
+            Move moveTwoResponseOne = new Move();
+            moveTwoResponseOne.moveStrength = -5;
+            moveTwoResponseOne.move = "e7e5";
+
+            Move moveTwoResponseTwo = new Move();
+            moveTwoResponseTwo.moveStrength = 8;
+            moveTwoResponseTwo.move = "d7d5";
+
+            moveTwoResponses.Add(moveTwoResponseOne);
+            moveTwoResponses.Add(moveTwoResponseTwo);
+            ///
+
+            moveTwo.responses = moveTwoResponses;
+
+            moves.Add(moveTwo);
+
+
+            Move moveToMake = Minimax(1, moves, true);
+
 
             Console.WriteLine("Press any key to escape: ");
             Console.ReadLine();
         }
 
 
-        public static minimax()
 
 
+        public static Move Minimax(int depth, List<Move> moves, bool isMaximizingPlayer)
+        {
+            //if(depth == 0)
+            //{
+            //    strongestMoveValue = 
+            //    for(int i=0; i<moves.Count; i++)
+            //    {
+
+            //    }
+            //}
+
+            if (depth == 0) //if depth == 0 || node is a terminal node
+            {
+                if (isMaximizingPlayer)
+                {
+                    Move strongestMove = new Move(-1000000);
+                    foreach(Move move in moves)
+                    {
+                        strongestMove = Max(strongestMove, move);
+                    }
+                    return strongestMove;
+                }
+                else
+                {
+                    Move strongestMove = new Move(1000000);
+                    foreach (Move move in moves)
+                    {
+                        strongestMove = Min(strongestMove, move);
+                    }
+                    return strongestMove;
+                }
+            }
+            if (isMaximizingPlayer)
+            {
+                Move maxMove = new Move(-1000000);
+                foreach (Move move in moves)
+                {
+                    List<Move> moveResponses = move.responses;
+                    maxMove = Max(maxMove, Minimax(depth-1, moveResponses, false));
+                }
+                return maxMove;
+            }
+            else
+            {
+                Move minMove = new Move(1000000);
+                foreach (Move move in moves)
+                {
+                    List<Move> moveResponses = move.responses;
+                    minMove = Min(minMove, Minimax(depth - 1, moveResponses, true));
+                }
+                return minMove;
+            }
+        }
+
+        public static Move Max(Move moveOne, Move MoveTwo) //public static Move Max(List<Move> moves)
+        {
+            Move strongestMove = moveOne;
+            if (strongestMove.moveStrength < MoveTwo.moveStrength)
+            {
+                strongestMove = MoveTwo;
+            }
+            return strongestMove;
+        }
+
+        public static Move Min(Move moveOne, Move MoveTwo)
+        {
+            Move strongestMove = moveOne;
+            if (strongestMove.moveStrength > MoveTwo.moveStrength)
+            {
+                strongestMove = MoveTwo;
+            }
+            return strongestMove;
+        }
 
 
         public static Game SetupGame(GameModeChoice gameMode, string p1Name, string p2Name)
@@ -101,6 +253,21 @@ namespace ChessConsole
             return game;
         }
     }
+
+    public class Node
+    {
+        public Dictionary<string, List<Node>> moves { get; set; }
+        public int moveValue { get; set; }
+
+
+        public Node()
+        {
+            moves = new Dictionary<string, List<Node>>();
+            moveValue = 0;
+        }
+    }
+
+
 }
 
 
@@ -122,7 +289,18 @@ namespace ChessConsole
                 }
             }
 
-            
+           public static Move Max(Move moveOne, Move MoveTwo) //public static Move Max(List<Move> moves)
+        {
+            Move strongestMove = moves[0];
+            foreach (Move move in moves)
+            {
+                if (move.moveStrength > strongestMove.moveStrength)
+                {
+                    strongestMove = move;
+                }
+            }
+            return strongestMove;
+        }
 
 
 
